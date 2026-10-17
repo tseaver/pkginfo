@@ -5,9 +5,9 @@ def _make_develop(dirname):
     return Develop(dirname)
 
 def test_develop_ctor_w_path():
-    from pkginfo.tests import _checkDevelop
+    from tests.unit import _helpers
     develop = _make_develop('.')
-    _checkDevelop(None, develop)
+    _helpers._checkDevelop(None, develop)
 
 def test_develop_ctor_w_invalid_path():
     import warnings 
