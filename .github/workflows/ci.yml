@@ -53,15 +53,16 @@ jobs:
 
       - name: Run tests, recording coverage data
         env:
-          # unique-per-job data file, for later aggregation
-          COVERAGE_FILE: .coverage.gh-${{ matrix.python-version }}
+          # unique-per-job data file, for later aggregation; non-hidden
+          # name, as upload-artifact@v4 excludes dotfiles by default
+          COVERAGE_FILE: coverage-gh-${{ matrix.python-version }}
         run: pytest --cov=pkginfo --cov-report= -q
 
       - name: Upload coverage data
         uses: actions/upload-artifact@v4
         with:
           name: coverage-${{ matrix.python-version }}
-          path: .coverage.gh-${{ matrix.python-version }}
+          path: coverage-gh-${{ matrix.python-version }}
           if-no-files-found: error
 
   coverage:
@@ -87,9 +88,9 @@ jobs:
 
       - name: Flatten and combine
         run: |
-          find coverage-data -type f -name '.coverage.*' \
+          find coverage-data -type f -name 'coverage-gh-*' \
             -exec mv {} . \;
-          coverage combine
+          coverage combine coverage-gh-*
 
       - name: "Report (gate 100%)"
         run: coverage report --fail-under=100
